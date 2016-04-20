@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS `proxy_list` CASCADE;
+CREATE TABLE `proxy_list` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `host` VARCHAR(20) NOT NULL,
+  `port` INT(11) NOT NULL, 
+  `ts_created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+  `ts_updated` TIMESTAMP,
+  `timeout` INT(11) DEFAULT NULL,
+  `status` TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) 
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
