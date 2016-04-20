@@ -2,7 +2,7 @@ import MySQLdb
 
 class Connector:
     
-    __db = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="howtosaygoodbye'x",db="proxy")
+    __db = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="proxy")
     __cur = __db.cursor()
     
     def get_proxy(self,id):
@@ -21,6 +21,6 @@ class Connector:
         self.__cur.execute("update proxy_list set status='%s' where id=%s;", (status,id))
         self.__db.commit()
         
-    def put_proxy(self,host,port):
+    def add_proxy(self,host,port):
         self.__cur.execute("insert into proxy_list (host,port) values (%s,%s)", (host,port))
         self.__db.commit()

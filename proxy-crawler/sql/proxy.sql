@@ -7,5 +7,6 @@ CREATE TABLE `proxy_list` (
   `ts_updated` TIMESTAMP,
   `timeout` INT(11) DEFAULT NULL,
   `status` TINYINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`) 
+  PRIMARY KEY (`id`),
+  UNIQUE KEY (`host`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
