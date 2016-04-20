@@ -9,6 +9,10 @@ class Connector:
         self.__cur.execute("select host,port,timeout from proxy_list where id=%s" % id)
         return self.__cur.fetchall()
     
+    def get_proxies_to_work(self):
+        self.__cur.execute("select * from proxy_list where status = 0")
+        return self.__cur.fetchall()
+        
     def get_all_proxies(self):
         self.__cur.execute("select * from proxy_list")
         return self.__cur.fetchall()

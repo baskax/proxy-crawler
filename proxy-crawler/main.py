@@ -28,6 +28,14 @@ for h, p in values:
         print((h,p), " added to list")
     except:
         continue
-
-
-
+proxies = conn.get_proxies_to_work()
+for key in proxies:
+    addr = "https://" + key[1] + ":" + str(key[2])
+    proxy =  urllib2.ProxyHandler({'http': addr})
+    opener = urllib2.build_opener(proxy)
+    urllib2.install_opener(opener)
+    try:
+        urllib2.urlopen('http://mojepanstwo.pl/neocraft')
+        conn.update_status(str(key[0]),1)
+    except:        
+        conn.update_status(str(key[0]),2)
