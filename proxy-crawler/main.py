@@ -37,5 +37,8 @@ for key in proxies:
     try:
         urllib2.urlopen('http://mojepanstwo.pl/neocraft')
         conn.update_status(str(key[0]),1)
+	print(addr," sukces")
     except:        
         conn.update_status(str(key[0]),2)
+	print(addr, " fail")
+	continue

@@ -2,7 +2,7 @@ import MySQLdb
 
 class Connector:
     
-    __db = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="",db="proxy")
+    __db = MySQLdb.connect(host="127.0.0.1",port=3306,user="root",passwd="howtosaygoodbye'x",db="proxy")
     __cur = __db.cursor()
     
     def get_proxy(self,id):
