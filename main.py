@@ -1,11 +1,11 @@
-import connector
 import urllib2
 import time
 import threading
-import Queue
+import PySQLPool
 from lxml import html
 
-conn = connector.Connector()
+db = PySQLPool.getNewConnection(host="127.0.0.1",port=3306,user="root",password="howtosaygoodbye'x",db="proxy")
+query = PySQLPool.getNewQuery(db)
 
 def crawlProxies(address):
     opener = urllib2.build_opener()
@@ -21,9 +21,9 @@ def crawlProxies(address):
     hosts = tree.xpath('//td[1]/text()')
     ports = tree.xpath('//td[2]/text()')
     values = zip(hosts,ports)
-    for h, p in values:
+    for host, port in values:
         try:
-            conn.add_proxy(h,p)
+            query.Query("insert into proxy_list (host,port) values ('%s','%s')", (host,port))
         except:
             continue
 
@@ -48,18 +48,19 @@ def validateProxy(key,tConn):
             print "GIT!"
             page = a.read()
             ping=(time.time()-start)*1000
-            tConn.update_status(str(key['id']),1)
-            tConn.update_timeout(str(key['id']),str(ping))
+            tConn.Query("update proxy_list set status='1' where id=%s", str(key['id']))
+            tConn.Query("update proxy_list set timeout='%s' where id=%s", (str(ping),str(key['id'])))
             s+=1       	
         else:
-            tConn.update_status(str(key['id']),2)
+            tConn.Query("update proxy_list set status='2' where id=%s",str(key['id']))
             f+=1            
     except:
         t+=1
-        tConn.update_status(str(key['id']),2)        
+        tConn.Query("update proxy_list set status='2' where id=%s", str(key['id']))      
 
 try:    
-    proxies = conn.get_proxies_to_work()
+    query.Query("select * from proxy_list where status = 0")
+    proxies = query.record
     print("Got proxies to work")
 except:
     print("There is no proxy with proper status")
@@ -69,7 +70,7 @@ class myThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
-        tConn = connector.Connector()
+        tConn = PySQLPool.getNewQuery(db)
         validateProxy(key,tConn)
         threads.remove(self)
 
