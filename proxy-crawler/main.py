@@ -39,24 +39,24 @@ def validateProxy(key,tConn):
     global f,s,t    
     addr = "http://" + key['host'] + ":" + str(key['port'])
     proxy =  urllib2.ProxyHandler({'http': addr})
+    id = key['id']
     opener = urllib2.build_opener(proxy)
     urllib2.install_opener(opener)
     try:
         a = urllib2.urlopen("http://panoramafirm.pl/",timeout=5)
         start = time.time()	
-        if a.getcode()==200:
-            print "GIT!"
+        if a.getcode()==200:            
             page = a.read()
             ping=(time.time()-start)*1000
-            tConn.Query("update proxy_list set status='1' where id=%s", str(key['id']))
-            tConn.Query("update proxy_list set timeout='%s' where id=%s", (str(ping),str(key['id'])))
+            tConn.Query("update proxy_list set status='1' where id='{0}'".format(str(id)))
+            tConn.Query("update proxy_list set timeout='{0}' where id={1}".format(str(ping),str(id)))
             s+=1       	
         else:
-            tConn.Query("update proxy_list set status='2' where id=%s",str(key['id']))
+            tConn.Query("update proxy_list set status='2' where id='{0}'".format(str(id)))
             f+=1            
     except:
         t+=1
-        tConn.Query("update proxy_list set status='2' where id=%s", str(key['id']))      
+        tConn.Query("update proxy_list set status='2' where id='{0}'".format(str(id)))         
 
 try:    
     query.Query("select * from proxy_list where status = 0")
@@ -72,6 +72,8 @@ class myThread(threading.Thread):
     def run(self):
         tConn = PySQLPool.getNewQuery(db)
         validateProxy(key,tConn)
+        PySQLPool.commitPool()
+        PySQLPool.cleanupPool()
         threads.remove(self)
 
 threads=[]
@@ -80,7 +82,7 @@ i = 0
 for key in proxies:
     i+=1
     if (i % 50 == 0):
-        print "Done " + i + " proxies"
+        print("Done " + str(i) + " proxies")
     while (len(threads) > 9):    
         try:
             myThread.sleep(1000)
