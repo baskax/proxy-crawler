@@ -2,7 +2,7 @@ import PySQLPool
 
 class Connector:
     
-    __db = PySQLPool.getNewConnection(host="127.0.0.1",port=3306,user="root",password="howtosaygoodbye'x",db="proxy")
+    __db = PySQLPool.getNewConnection(host="127.0.0.1",port=3306,user="tajnyuser",password="tajnehaslo",db="proxy")
     __query = PySQLPool.getNewQuery(__db)
     
     def get_proxy(self,id):
