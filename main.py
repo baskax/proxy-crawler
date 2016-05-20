@@ -6,7 +6,7 @@ import PySQLPool
 from lxml import html
 
 PySQLPool.getNewPool().maxActiveConnections = 12    #nothing to explain
-db = PySQLPool.getNewConnection(host="127.0.0.1",port=3306,user="root",password="howtosaygoodbye'x",db="proxy")
+db = PySQLPool.getNewConnection(host="127.0.0.1",port=3306,user="tajnyuser",password="tajnehaslo",db="proxy")
 query = PySQLPool.getNewQuery(db)
 
 
